@@ -18,9 +18,8 @@ public class PlayerController : MonoBehaviour
 
 	private Rigidbody _rigidbody;
 
-    Vector3 direction;
-    
-
+    [SerializeField]
+    private Vector3 direction;
 
 
     void Start () 
@@ -36,11 +35,11 @@ public class PlayerController : MonoBehaviour
        // transform.parent.position = transform.position;
         CheckForInput ();
         //Vector3 movement = FPSCamera.TransformDirection(_moveHorizontal, 0, _moveVertical);
-		lives=GetComponent<HealthManager>().NumberOfLives;
+		lives = GetComponent<HealthManager>().NumberOfLives;
 		GameManager.gm.LivesLeft (lives);
 
-		
-	}
+       
+    }
 
 	void CheckForInput ()
 	{
@@ -50,33 +49,36 @@ public class PlayerController : MonoBehaviour
 
 	void FixedUpdate ()
 		{
-        if (camClick)
-            FpsMove();
-        else
-            TpMove();
+        //if (camClick)
+            Move();
+        //else
+            //TpMove();
 
-        direction.Normalize();
+        //direction.Normalize();
 		}
 
-	void FpsMove()
+	void Move()
 	{
 
         //Vector3 movement = FPSCamera.TransformDirection(movementX + movementZ);
         direction = new Vector3(_moveHorizontal, 0.0f, _moveVertical);
-		direction = FPSCamera.transform.TransformDirection(direction);   
-        _rigidbody.AddForce(direction * Speed);
+        direction = Camera.main.transform.TransformDirection(direction);
+        direction.Normalize();
+        _rigidbody.AddForce(direction * Speed); //TODO: uzimati isključivo bez y vektor
+        
       
             
 	}
-
+    /*
     void TpMove() 
-        {     
-        direction = new Vector3(_moveHorizontal, 0.0f, _moveVertical);
-        direction = TPCamera.transform.TransformDirection (direction);
-		direction.Normalize ();
-        _rigidbody.AddForce(direction * Speed);
+        {
+        _directionTP = TPCamera.transform.forward;    
+        _directionTP = new Vector3(_moveHorizontal, 0.0f, _moveVertical);
+        _directionTP = TPCamera.transform.TransformDirection (_directionTP);
+		_directionTP.Normalize ();
+        _rigidbody.AddForce(_directionTP * Speed);
         }
-
+*/
     /*void OnTriggerEnter (Collider other)
 	{
 		if (other.tag == "Coin") 

@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject ThirdPersonCam;
     public GameObject FirstPersonCam;
-    public bool cameraChange = true;
+    public bool cameraChange = false;
 
     private AudioSource _backgroundSounds;
     private AudioSource _playerAudioSource;
