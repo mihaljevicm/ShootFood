@@ -87,9 +87,7 @@ public class GameManager : MonoBehaviour
         }
 		if (Input.GetMouseButton(1))
         {
-            Debug.Log("click");
             cameraChange = true;
-
         }
         //ChangeCamera(cameraChange);
 
