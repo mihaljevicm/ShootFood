@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
 	public int Lives = 0;
 	public Text LivesText;
 
+    public int OverAllScore = 0;
+
     //public int VictoryScore = 5;
     public Canvas VictoryCanvas;
     public Canvas DefeatCanvas;
@@ -194,6 +196,8 @@ public class GameManager : MonoBehaviour
 
     public void OnVictory()
     {
+        OverAllScore = (Score * EnemyKills) / (int)Timer;
+        Debug.Log("Score: " + OverAllScore);
         VictoryCanvas.enabled = true;
         _backgroundSounds.Stop();
         _backgroundSounds.clip = Clip[3];
