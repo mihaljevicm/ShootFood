@@ -46,9 +46,8 @@ public class Shoot : MonoBehaviour
             else
                 _currentProjectile -= 1;
         }
-        if ((_currentProjectile > _numberOfProj) || (_currentProjectile < 0))
+        if ((_currentProjectile >= _numberOfProj) || (_currentProjectile < 0))
             _currentProjectile = 0;
-        Debug.Log("current wepon: "+_currentProjectile);
     }
 
 	private void ShootProjectile(Transform firePoint)
