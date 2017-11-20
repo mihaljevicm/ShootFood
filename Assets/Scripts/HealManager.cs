@@ -5,9 +5,9 @@ using UnityEngine;
 public class HealManager : MonoBehaviour 
 {
 	public float Heal = 5.0f;
-
-
-	void OnCollisionEnter(Collision other)
+  
+   
+    void OnCollisionEnter(Collision other)
 	{
 
 		HealthManager healthManager = other.gameObject.GetComponent<HealthManager> ();
@@ -15,7 +15,6 @@ public class HealManager : MonoBehaviour
 		if (healthManager != null && other.gameObject.tag == "Player") 
 
 		{
-			
 				healthManager.ApplyHeal (Heal);
 				Destroy (gameObject);
 

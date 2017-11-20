@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
         Enemy = GameObject.FindGameObjectsWithTag("Enemy");
         HVCoin = GameObject.FindGameObjectsWithTag("HVCoin");
 
-        if (PlayerController.pc != null)
+        //if (PlayerController.pc != null)
 			_playerAudioSource = Player.GetComponent<AudioSource>();
 		if (_playerAudioSource == null)
 			_playerAudioSource = GetComponent<AudioSource> ();
@@ -91,13 +91,22 @@ public class GameManager : MonoBehaviour
         {
             cameraChange = true;
         }
-        //ChangeCamera(cameraChange);
-
+        
         else
         {
             cameraChange = false;
         }
         ChangeCamera(cameraChange);
+
+        /*
+        if(KeySilver || GoldKey)
+        {
+            if (_playerAudioSource == null)
+                _playerAudioSource = GetComponent<AudioSource>();
+            else
+                _playerAudioSource.PlayOneShot(Clip[5], HVCoinVolume);
+        }
+        */
 
 		if (KeySilver && GoldKey)
 			levelCondition = true;

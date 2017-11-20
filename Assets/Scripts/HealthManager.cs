@@ -56,6 +56,9 @@ public class HealthManager : MonoBehaviour
 	public void ApplyHeal(float amount)
 	{
 		Health += amount;
+        AudioSource _audioSource = GetComponentInParent<AudioSource>();
+        AudioClip _clip = _audioSource.clip;
+        _audioSource.PlayOneShot(_clip);
 	}
 
 	public void AddLives(int amount)
