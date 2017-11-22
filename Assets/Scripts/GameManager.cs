@@ -70,7 +70,15 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        gm = this;
+        //if we don't have an [gm] set yet
+        //if (!gm)
+            gm = this;
+        //otherwise, if we do, kill this thing
+       // else
+         //   Destroy(this.gameObject);
+
+
+        //DontDestroyOnLoad(this.gameObject);
 
         VictoryCanvas.enabled = false;
         DefeatCanvas.enabled = false;
@@ -87,26 +95,8 @@ public class GameManager : MonoBehaviour
         {
             ChangeTime(Time.deltaTime);
         }
-		if (Input.GetMouseButton(1))
-        {
-            cameraChange = true;
-        }
-        
-        else
-        {
-            cameraChange = false;
-        }
-        ChangeCamera(cameraChange);
+		
 
-        /*
-        if(KeySilver || GoldKey)
-        {
-            if (_playerAudioSource == null)
-                _playerAudioSource = GetComponent<AudioSource>();
-            else
-                _playerAudioSource.PlayOneShot(Clip[5], HVCoinVolume);
-        }
-        */
 
 		if (KeySilver && GoldKey)
 			levelCondition = true;
@@ -114,6 +104,19 @@ public class GameManager : MonoBehaviour
 		Lives = Player.GetComponent<HealthManager> ().NumberOfLives;
     }
 
+    void FixedUpdate()
+    {
+        if (Input.GetMouseButton(1))
+        {
+            cameraChange = true;
+        }
+
+        else
+        {
+            cameraChange = false;
+        }
+        ChangeCamera(cameraChange);
+    }
 
     public void PrintName()
     {
@@ -236,7 +239,7 @@ public class GameManager : MonoBehaviour
         }
         if (what == 1)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
         }
     }
 
