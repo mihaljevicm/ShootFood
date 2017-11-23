@@ -1,11 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelPassCoinCondition : MonoBehaviour {
 
-	private bool pass;
-
+    private bool pass = false;
 	void Update () 
 	{
 		pass = GameManager.gm.levelCondition;
@@ -16,7 +16,10 @@ public class LevelPassCoinCondition : MonoBehaviour {
 		if (other.gameObject.tag == "Player") 
 		if(pass)
 			GameManager.gm.OnVictory ();
-		 else
-			Debug.Log ("try again with key");
+		 else if(!pass)
+            {
+              GameManager.gm.FalsePassCondition();
+             
+            }
 	}
 }

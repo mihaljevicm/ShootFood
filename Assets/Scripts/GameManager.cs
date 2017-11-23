@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,22 +17,27 @@ public class GameManager : MonoBehaviour
     public float Timer = 20.0f;
     public Text TimerText;
 
-	public int EnemyKills =0;
-	public Text KillScoreText;
+    public int EnemyKills = 0;
+    public Text KillScoreText;
 
-	public int Lives = 0;
-	public Text LivesText;
+    public int Lives = 0;
+    public Text LivesText;
 
     public int OverAllScore = 0;
+
+    [SerializeField]
+    private float messageWait = 2.0f;
 
     //public int VictoryScore = 5;
     public Canvas VictoryCanvas;
     public Canvas DefeatCanvas;
     public Canvas FPSCanvas;
+    public Canvas ConditionCanvas;
 
     public GameObject ThirdPersonCam;
     public GameObject FirstPersonCam;
     public bool cameraChange = false;
+    public bool canChange = false;
 
     private AudioSource _backgroundSounds;
     private AudioSource _playerAudioSource;
@@ -42,10 +50,10 @@ public class GameManager : MonoBehaviour
     private GameObject[] HVCoin;
     Transform playerPosition;
 
-	public bool KeySilver=false, GoldKey=false, levelCondition=false;
-	private bool stopTime = true;
+    public bool KeySilver = false, GoldKey = false, levelCondition = false;
+    private bool stopTime = true;
 
-    
+
 
     void Start()
     {
@@ -56,30 +64,31 @@ public class GameManager : MonoBehaviour
         HVCoin = GameObject.FindGameObjectsWithTag("HVCoin");
 
         //if (PlayerController.pc != null)
-			_playerAudioSource = Player.GetComponent<AudioSource>();
-		if (_playerAudioSource == null)
-			_playerAudioSource = GetComponent<AudioSource> ();
+        _playerAudioSource = Player.GetComponent<AudioSource>();
+        if (_playerAudioSource == null)
+            _playerAudioSource = GetComponent<AudioSource>();
 
         _backgroundSounds = GetComponent<AudioSource>();
         _backgroundSounds.clip = Clip[0];
         _backgroundSounds.loop = true;
         _backgroundSounds.Play();
 
-       
+
     }
 
     void Awake()
     {
         //if we don't have an [gm] set yet
         //if (!gm)
-            gm = this;
+        gm = this;
         //otherwise, if we do, kill this thing
-       // else
-         //   Destroy(this.gameObject);
+        // else
+        //   Destroy(this.gameObject);
 
 
         //DontDestroyOnLoad(this.gameObject);
 
+        ConditionCanvas.enabled = false;
         VictoryCanvas.enabled = false;
         DefeatCanvas.enabled = false;
 
@@ -87,26 +96,28 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-		if(Input.GetKey("escape"))
-		{
-			Application.Quit ();
-		}
+        //Cursor.visible = false;
+
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
         if (stopTime == true)
         {
             ChangeTime(Time.deltaTime);
         }
-		
 
 
-		if (KeySilver && GoldKey)
-			levelCondition = true;
 
-		Lives = Player.GetComponent<HealthManager> ().NumberOfLives;
+        if (KeySilver && GoldKey)
+            levelCondition = true;
+
+        Lives = Player.GetComponent<HealthManager>().NumberOfLives;
     }
 
     void FixedUpdate()
     {
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1) && canChange)
         {
             cameraChange = true;
         }
@@ -161,20 +172,20 @@ public class GameManager : MonoBehaviour
         {
             PlayHVCoinSound();
         }
-			
+
 
     }
 
-	public void EnemyKill(int amount)
-	{
-		EnemyKills += amount;
-		KillScoreText.text = "Kill count:" + EnemyKills.ToString ();
-	}
+    public void EnemyKill(int amount)
+    {
+        EnemyKills += amount;
+        KillScoreText.text = "Kill count:" + EnemyKills.ToString();
+    }
 
-	public void LivesLeft(int amount)
-	{
-		LivesText.text = "Lives: " + amount.ToString();
-	}
+    public void LivesLeft(int amount)
+    {
+        LivesText.text = "Lives: " + amount.ToString();
+    }
 
     public void ChangeTime(float amount)
     {
@@ -197,7 +208,8 @@ public class GameManager : MonoBehaviour
 
     public void EnviromentFreeze()
     {
-		FPSCanvas.enabled = false;
+        //Cursor.visible = true;
+        FPSCanvas.enabled = false;
         stopTime = false;
         foreach (GameObject EnemySpawner in Enemy)
             EnemySpawner.GetComponent<EnemySpawner>().IsActive = false;
@@ -227,6 +239,17 @@ public class GameManager : MonoBehaviour
         Debug.Log(Clip[4].loadState);
         _backgroundSounds.Play();
     }
+    public void FalsePassCondition()
+    {
+        StartCoroutine(ConditionMessage());
+    }
+
+    public IEnumerator ConditionMessage()
+    {
+        ConditionCanvas.enabled = true;
+        yield return new WaitForSeconds(messageWait);
+        ConditionCanvas.enabled = false;
+    }
 
     public void LoadScene(int what)
     {
@@ -235,27 +258,45 @@ public class GameManager : MonoBehaviour
 
         if (what == 0)
         {
+            Debug.Log("true");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         if (what == 1)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
+            int index = SceneManager.GetActiveScene().buildIndex + 1;
+            if (index == 4)
+                index = 0;
+            else
+                SceneManager.LoadScene(index);
+            
         }
     }
 
     public void PlayCoinSound() //Coin value 1
     {
-		if (_playerAudioSource == null)
-			_playerAudioSource = GetComponent<AudioSource> ();
-		else
-        _playerAudioSource.PlayOneShot(Clip[1], CoinVolume);
+        if (_playerAudioSource == null)
+            _playerAudioSource = GetComponent<AudioSource>();
+        else
+            _playerAudioSource.PlayOneShot(Clip[1], CoinVolume);
     }
 
     public void PlayHVCoinSound() //Coin value 5
     {
-		if (_playerAudioSource == null)
-			_playerAudioSource = GetComponent<AudioSource> ();
-		else
-        _playerAudioSource.PlayOneShot(Clip[2], HVCoinVolume);
+        if (_playerAudioSource == null)
+            _playerAudioSource = GetComponent<AudioSource>();
+        else
+            _playerAudioSource.PlayOneShot(Clip[2], HVCoinVolume);
     }
+
+    //TODO: Save/Load system
+    /*private void SaveHS() 
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/Level" + SceneManager.GetActiveScene().buildIndex + "HighScore.dat");
+
+        PlayerHighScore data = new PlayerHighScore
+        {
+            HighScore = 
+        }
+    }*/
 }

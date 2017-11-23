@@ -13,17 +13,15 @@ public class HealthManager : MonoBehaviour
 	public int NumberOfLives = 3;
 	public OnAllLivesGone OnDeath=OnAllLivesGone.DestroyObject;
 	public Vector3 StartingPosition = Vector3.zero;
+    private Rigidbody _rigidbody;
    
     void Start ()
 	{
+        _rigidbody = GetComponentInParent<Rigidbody>();
 		StartingPosition = transform.position;
     }
 		
-
-	void Update () 
-	{
-		
-	}
+    
 
 	public void ApplyDamage(float amount)
 	{
@@ -37,6 +35,7 @@ public class HealthManager : MonoBehaviour
                 Health = 15.0f;
 
                 transform.position = StartingPosition;
+                _rigidbody.velocity.Normalize();            
             }
             else                                         //Ako je broj života manji od 0 level će se resetirati i varijable će se vratiti na početno stanje
             {

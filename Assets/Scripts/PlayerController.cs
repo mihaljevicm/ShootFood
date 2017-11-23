@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private AudioSource _audioSource;
 	private Rigidbody _rigidbody;
+    private Transform _transform;
 
     [SerializeField]
     private Vector3 direction;
@@ -27,6 +28,7 @@ public class PlayerController : MonoBehaviour
     void Start () 
 	{
         //pc = this;
+        _transform = GetComponent<Transform>();
 		_rigidbody = GetComponent<Rigidbody> ();
         _audioSource = GetComponent<AudioSource>();
         //camClick = GameManager.gm.cameraChange;
@@ -39,6 +41,11 @@ public class PlayerController : MonoBehaviour
 
 		lives = GetComponent<HealthManager>().NumberOfLives;
 		GameManager.gm.LivesLeft (lives);
+        if(_transform.position.y <= 0)
+        {
+            HealthManager _healthManager = GetComponentInParent<HealthManager>();
+            _healthManager.ApplyDamage(_healthManager.Health);
+        }
 
        
     }

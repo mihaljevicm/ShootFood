@@ -26,6 +26,7 @@ public class TriggerArea : MonoBehaviour {
     {
         if(other.gameObject.tag == "Player")
         {
+            Debug.Log("Player");
             foreach (ObjectSpawner spawner in _spawners)
             {
                 spawner.IsActive = true;
